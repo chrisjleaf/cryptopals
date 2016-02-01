@@ -1,6 +1,6 @@
 from Crypto.Util.strxor import strxor_c
 
-freqs = {
+alpha_freqs = {
         'a': 0.0651738,
         'b': 0.0124248,
         'c': 0.0217339,
@@ -30,20 +30,24 @@ freqs = {
         ' ': 0.1918182 
         }
 
-def scoreByte(b): 
-    b = b.lower()
-    if b in freqs.keys():
-        return freqs[b]
-    return 0.0
 
-def scoreStr(string):
+class ByteCipherBreaker:
+  def __init__(self):
+    self.freqs = alpha_freqs
+
+  def scoreByte(self,b): 
+      b = b.lower()
+      if b in self.freqs.keys():
+          return self.freqs[b]
+      return 0.0
+
+  def scoreStr(self,string):
     score = 0.0
     for s in string:
-        score += scoreByte(s)
+        score += self.scoreByte(s)
     return score / len(string)
 
-def breakSingleByteXOR(s):
-    def key(p):
-        return p[1]
-    return max([(i, scoreStr(strxor_c(s, i)), strxor_c(s,i)) for i in range(0, 256)], key=key)
-
+  def breakSingleByteKey(self,s):
+      def key(p):
+          return p[1]
+      return max([(i, self.scoreStr(strxor_c(s, i)), strxor_c(s,i)) for i in range(0, 256)], key=key)

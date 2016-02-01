@@ -1,4 +1,4 @@
-from breakByteXOR import breakSingleByteXOR
+from tools.KeyCipherBreaker import KeyCipherBreaker
 
 with open('4.txt', 'r') as f:
     cypher = []
@@ -8,8 +8,9 @@ with open('4.txt', 'r') as f:
 
 
 attempts = []
+breaker = KeyCipherBreaker()
 for s in cypher:
-    attempts.append( breakSingleByteXOR(s) )
+    attempts.append( breaker.breakSingleByteKey(s) )
 def score(p):
     return p[1]
 print max(attempts, key=score)
