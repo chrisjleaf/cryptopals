@@ -75,15 +75,16 @@ with open(sys.argv[1],'rb') as f:
   print len(text)
 
 diffs = []
-for keysize in range(2,40):
+for keysize in range(1,40):
   for i in range(0,4):
     diff = hamming(text[keysize*i:keysize*(i+1)], text[keysize*(i+1):keysize*(i+2)])
   diff = diff/4
 
   diffs.append({keysize:diff})
 
+print diffs
 # Only these sizes are particularly small
-for keysize in range(2,12):
+for keysize in range(1,12):
   key = ""
   for i in range(0,keysize):
     block = ""

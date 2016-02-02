@@ -1,5 +1,4 @@
 import os
-from random import randint
 from Crypto.Cipher import AES
 from base64 import b64decode
 import util
@@ -13,7 +12,7 @@ key = None
 def encryptionOracle(plain):
   global key
   if key == None:
-    key = 'A' * 16 #util.randbytes(16)
+    key = util.randbytes(16)
   plain = plain + suffix
   padding = 16 - (len(plain) % 16)
   plain += chr(padding) * padding
