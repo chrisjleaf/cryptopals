@@ -1,4 +1,3 @@
-from Crypto.Random import random
 
 def randbytes(k):
   return random.long_to_bytes(random.getrandbits(8*k))

@@ -1,14 +1,14 @@
 import os
 from Crypto.Cipher import AES
 import re
-import util
+from tools.utils import *
 
 key = None
 
 def ecbOracle(plain):
   global key
   if key == None:
-    key = util.randbytes(16)
+    key = randbytes(16)
   padding = 16 - (len(plain) % 16)
   plain += chr(padding) * padding
 
@@ -24,7 +24,7 @@ def profile_for(email):
 def checkProfile(profile):
   global key
   if key == None:
-    key = util.randbytes(16)
+    key = randbytes(16)
 
   cypher = AES.new(key, AES.MODE_ECB )
   o = {}

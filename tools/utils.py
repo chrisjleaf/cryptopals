@@ -1,3 +1,5 @@
+from Crypto.Random import random
+
 def strxor(a, b):     # xor two strings of different lengths
   if len(a) > len(b):
     return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a[:len(b)], b)])
@@ -22,3 +24,13 @@ def hamming(str1,str2):
       diff = diff >> 1
   return total
 
+def pad_pkcs7(text,block_length=16):
+  pad_length = block_length - ( len(text) % block_length )
+  if pad_length == 0:
+    pad_length = block_length
+
+  return text + chr(pad_length)*pad_length
+
+
+def randbytes(k):
+  return random.long_to_bytes(random.getrandbits(8*k))

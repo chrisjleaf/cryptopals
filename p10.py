@@ -1,6 +1,6 @@
 from Crypto.Cipher import AES
-from strxor import strxor
-from pkcs7 import pkcs_pad_block as pad_message
+from tools.utils import *
+from base64 import b64decode
 
 def CBC_decrypt(cipher, text, IV):
   previous = IV
@@ -19,7 +19,7 @@ def CBC_encrypt(cipher, text, IV):
   previous = IV
   blockLen = 16
   cipher_text = ""
-  text = pad_message(text, blockLen)
+  text = pad_pkcs7(text, blockLen)
 
   for i in range(0,len(text),blockLen):
     t = strxor(text[i:i+16], previous)
@@ -28,3 +28,12 @@ def CBC_encrypt(cipher, text, IV):
     previous = block
 
   return cipher_text
+
+cypher = ""
+with open('10.txt', 'r') as f:
+    ts = f.readlines()
+    for t in ts:
+        cypher += b64decode(t.strip())
+
+c = AES.new("YELLOW SUBMARINE", AES.MODE_ECB)
+print CBC_decrypt(c, cypher, '\x00'*16)
