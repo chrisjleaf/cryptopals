@@ -31,6 +31,17 @@ def pad_pkcs7(text,block_length=16):
 
   return text + chr(pad_length)*pad_length
 
+def checkPadding(message):
+  lastByte = message[-1]
+  if ord(lastByte) == 0:
+    return False
+  for i in range(1,ord(lastByte)+1):
+    if message[-i] != lastByte:
+      return False
+  return True
 
 def randbytes(k):
   return random.long_to_bytes(random.getrandbits(8*k))
+
+def randInt(a,b):
+  return random.randint(a,b)
