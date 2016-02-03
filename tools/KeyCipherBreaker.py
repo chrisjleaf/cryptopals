@@ -5,17 +5,28 @@ from utils import *
 from ByteCipherBreaker import ByteCipherBreaker
 import operator 
 
-def transform(text, blockSize):
-    blocks = []
-    for i in range(0,blockSize): 
-        b = ""
-        for j in range(i, len(text), blockSize):
-            b += text[j]
-        blocks.append(b)
-    return blocks
-
-
 class KeyCipherBreaker(ByteCipherBreaker):
+  def divideAndConquer(self, text, size):
+    blocks = self.transform(text, size)
+        
+    score = 0
+    key = ""
+    strs = []
+    for i in range(0,size):
+        b, s, string = self.breakSingleByteKey(blocks[i])  
+        score += s
+        key += chr(b)
+        strs.append(string)
+    
+    score = score/size
+    clear = ""
+    for i in range(0,len(strs[0])):
+        for j in range(0,len(strs)):
+            if i < len(strs[j]):
+                clear += strs[j][i]
+
+    return (str(key),score,clear)
+
   def breakKey(self,text,maxKeyLen=40,sizesToTry=4,numSamples=5):
     dists = {}
     for i in range(1, maxKeyLen):
@@ -31,28 +42,21 @@ class KeyCipherBreaker(ByteCipherBreaker):
     
     results = []
     for size in sizes:
-        blocks = transform(text, size)
-        
-        score = 0
-        key = ""
-        strs = []
-        for i in range(0,size):
-            b, s, string = self.breakSingleByteKey(blocks[i])  
-            score += s
-            key += chr(b)
-            strs.append(string)
-        
-        score = score/size
-        clear = ""
-        for i in range(0,len(strs[0])):
-            for j in range(0,len(strs)):
-                if i < len(strs[j]):
-                    clear += strs[j][i]
+      results.append( self.divideAndConquer(text, size) )
     
-        results.append((str(key),score,clear))
     def key(p):
         return p[1]
     return max(results, key=key)
+
+  def transform(self, text, blockSize):
+      blocks = []
+      for i in range(0,blockSize): 
+          b = ""
+          for j in range(i, len(text), blockSize):
+              b += text[j]
+          blocks.append(b)
+      return blocks
+
 
 if __name__ == "__main__":
     with open(sys.argv[1],'rb') as f: 

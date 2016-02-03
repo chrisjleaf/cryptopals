@@ -2,7 +2,6 @@ from oracles import *
 from utils import *
 
 def _nextByte(check, known, targets):
-  valid = None
   for c in range(0,256):
     pad = len(known) + 1
     pad = chr(pad)*pad
@@ -17,11 +16,11 @@ def _nextByte(check, known, targets):
         guess = guess + strxor( targets[14:16], strxor('\x01' + pad, '\x00' + chr(c)) ) 
         guess = guess + targets[16:]
         if not check(guess) == None:
-          valid = c
+          return c
       else:
-        valid = c
+        return c
      
-  return valid
+  return None
 
 def breakCBC(req, check):
   cipher = req()

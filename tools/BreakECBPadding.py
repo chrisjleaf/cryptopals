@@ -3,14 +3,12 @@ from oracles import *
 
 def _nextByte(oracle, known, blockSize):
   padding = "A" * (blockSize - (len(known) % blockSize) - 1)
-  d = {}
+  enc = oracle(padding)[0:len(padding) + len(known) + 1]
   for i in range(0,256):
     t = padding + known + chr(i)
-    enc = oracle( t )[0:len(padding) + len(known) + 1]
-    d[enc] = chr(i)
-  enc = oracle(padding)[0:len(padding) + len(known) + 1]
-  if enc in d:
-    return d[enc]
+    c = oracle( t )[0:len(padding) + len(known) + 1]
+    if c == enc:
+      return chr(i)
   return None
 
 
