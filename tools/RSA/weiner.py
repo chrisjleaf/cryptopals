@@ -19,12 +19,12 @@ def cf2f(cf):
   '''
   Continued fraction to fraction
   '''
-  f = Fraction(0, 1)
+  f = g.mpq(0,1)
   for x in reversed(cf):
     try:
       f = 1 / (f+x)
     except ZeroDivisionError:
-      return Fraction(0, 1)
+      return g.mpq(0, 1)
   return 1/f
 
 def cf2cvg(cf):
@@ -45,14 +45,13 @@ def weiner(N,e):
     det = b*b - 4*N
     if det < 0: 
       continue
-    root = long(g.sqrt(det))
-    if root * root == det and not (b + root) & 1:
-      p = g.mpz((b + root) / 2)
-      q = g.mpz((b - root) / 2)
-      d = g.mpz(d)
-      if checkFactors(g.mpz(p),g.mpz(q),g.mpz(N)):
-        return (p,q,d)
-      raise Exception("Invalid result generated")
+    root = g.mpz(g.sqrt(det))
+    if g.is_square(det) and  g.is_even(b + root):
+        p = (b + root) / 2
+        q = (b - root) / 2
+        if checkFactors(p,q,N):
+          return (p,q,d)
+        raise Exception("Invalid result generated")
 
 def checkFactors(p,q,N):
   x = g.f_mod( N, p )
@@ -82,7 +81,7 @@ if __name__ == '__main__':
       F7A5B744A73DF34D21C47592E149074A3CCEF749ECE475E3B6B0C8EECAC7C55290FF148E9A29DB8480CFE2A\
       57801275",16)
 
-  P,Q,D = breakKey(long(N),long(e))
-  print "P = " + str(long(P))
-  print "Q = " + str(long(Q))
+  P,Q,D = breakKey(N,e)
+  print "P = " + str(P)
+  print "Q = " + str(Q)
   print "D = " + str(D)
